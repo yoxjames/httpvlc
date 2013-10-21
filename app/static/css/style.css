@@ -1,0 +1,31 @@
+.centered
+{
+font-size:1.0em;
+margin:auto;
+width:100%;
+text-align: center;
+position:relative;
+}
+
+.right-side
+{
+display:block;
+right:0px;
+position:relative;
+width:97%;
+margin-left:88%;
+}
+
+.divider
+{
+margin-bottom:2.0em;
+}
+
+#left-btn
+{
+border-top-right-radius:0px !important;
+}
+#right-btn
+{
+border-bottom-left-radius:0px !important;
+}

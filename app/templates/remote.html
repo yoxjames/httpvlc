@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block content %}
+
+<div data-role="header" data-id="foo1" data-position="fixed">
+  <h1>Remote Control</h1>
+  <div data-role="navbar">
+    <ul>
+      <li><a href="{{ url_for('remote') }}" class="ui-state-persist ui-btn-active">Control</a></li>
+      <li><a href="{{ url_for('media') }}">Media</a></li>
+    </ul>
+  </div>
+  <a href="#"id="pwr-btn" data-role="button" class="ui-btn-right">Power</a>
+</div>
+
+
+<div data-role="content">
+
+<!--
+<iframe height="550" width="900" src="http://localhost:{{ VLC_PORT }}"></iframe>
+-->
+
+<div id="vertgrp" class="centered" data-role="controlgroup" data-type="vertical">
+  <a href="#" id="up-btn" data-role="button" data-icon="arrow-u"
+	data-iconpos="notext" data-inline="true"></a>
+  <div id="horizgrp"class="centered" data-role="controlgroup" data-type="horizontal">
+    <a href="#" id="left-btn" data-role="button" data-icon="arrow-l"
+	data-iconpos="notext" data-inline="true"></a>
+    <a href="#" id="center-btn" data-role="button" data-icon="star"
+	data-iconpos="notext"></a>
+    <a href="#" id="right-btn" data-role="button" data-icon="arrow-r"
+    data-iconpos="notext" data-inline="true"></a>
+  </div>
+  <a href="#" id="bottom-btn" data-role="button" data-icon="arrow-d"
+	data-iconpos="notext" data-inline="true"></a>
+
+</div>
+
+<hr />
+<div class="centered" data-role="controlgroup" data-type="horizontal">
+  <a href="#" id="pp-btn" data-role="button" data-icon="star" data-inline="true">Play</a>
+  <a href="#" id="fs-btn" data-role="button" data-icon="star" data-inline="true">Max</a>
+</div>
+
+</div>
+
+<script>
+
+$(document).ready(function()
+{
+  $("#pp-btn").bind('vclick',function()
+  {
+    $.get("http://192.168.1.116:{{ VLC_PORT }}/requests/status.xml?command=pl_pause");
+  });
+
+  $("#fs-btn").bind('vclick',function()
+  {
+    $.get("http://192.168.1.116:{{ VLC_PORT }}/requests/status.xml?command=fullscreen");
+  });
+});
+
+</script>
+
+{% endblock %}
+
+

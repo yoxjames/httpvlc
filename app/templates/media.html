@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block mobilehead %}
+
+{% endblock %}
+
+{% block content %}
+
+<div data-role="header" data-id="foo1" data-position="fixed">
+  <h1>Remote Control</h1>
+  <div data-role="navbar">
+    <ul>
+      <li><a href="{{ url_for('remote') }}">Control</a></li>
+      <li><a href="{{ url_for('media') }}" class="ui-state-persist ui-btn-active">Media</a></li>
+    </ul>
+  </div>
+</div>
+
+<div data-role="content">
+
+<div class="centered" data-role="controlgroup" data-type="horizontal">
+  <a href="#" id="back-btn" data-role="button" data-inline="true" 
+	  data-icon="back" data-iconpos="notext"></a>
+  <a href="#" id="home-btn" data-role="button" data-inline="true" 
+	  data-icon="home" data-iconpos="notext"></a>
+  <a href="#" id="forward-btn" data-role="button" data-inline="true" 
+	  data-icon="forward" data-iconpos="notext"></a>
+</div>
+
+  <hr class="divider" />
+  <ul id="ls-list" data-role="listview" data-filter="true" data-inset="true">
+  <!-- Populate this ul with contents from /ajax/ls -->
+  </ul>
+</div>
+
+<script>
+function cd(newdir)
+{
+  $.get('/ajax/cd/'+newdir);
+}
+
+function cdls(newdir)
+{
+  $.get('/ajax/cd/'+newdir, function(data)
+  {
+    ls();
+  });
+}
+
+function create_list()
+{
+  $("#ls-list").empty().listview('refresh');
+  $("#ls-list").append(
+	'<li data-icon="back"'
+	+'class="ls-directory"'
+        +'id="__BACK__">'
+	+'<a href="#">'
+	+'..'
+	+'</a></li>').listview("refresh");
+  $("#ls-list").append(
+	'<li data-role="list-divider">Files</li>');
+}
+
+function play(f)
+{
+  $.get('/ajax/play/'+f, function(data)
+  {
+ 
+  });
+}
+
+
+function ls()
+{
+  create_list();
+  $.getJSON('/ajax/ls', function(data)
+  {
+    $.each(data, function(index, value)
+    {
+      var trans_val = value[0].replace(/ /g,"_space_");
+      //alert(trans_val);
+      if (value[1]) // If we have a directory
+      {
+        $("#ls-list").append(
+	      '<li data-icon="arrow-r" id="'
+	      +trans_val
+	      +'"class="ls-directory">'
+	      +'<a href="#">'
+	      +value[0]
+	      +'</a></li>').listview("refresh");
+      }
+      else
+      {
+        $("#ls-list").append(
+	      '<li id="'
+	      +trans_val
+	      +'"class="ls-file">'
+	      +'<a href="#">'
+	      +'<img src="../static/css/images/vlc.ico" alt="VLC" class="ui-li-icon">'
+	      +value[0]
+	      +'</a></li>').listview("refresh");
+      }
+
+    });
+  });
+}
+
+$(document).ready(function()
+{
+  $("#ls-list").on('vclick','li', function()
+  {
+    if ($(this).hasClass("ls-directory"))
+    {
+      cdls($(this).attr('id'));
+    }
+    else if ($(this).hasClass("ls-file"))
+    {
+      play($(this).attr('id'));
+    }
+  });
+
+  $("#home-btn").bind('vclick',function()
+  {
+    cdls("~");
+  });
+  ls();
+});
+
+</script>
+{% endblock %}
